@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>books 詳細画面</title>
+</head>
+<body>
+    <h1>books 詳細画面</h1>
+    <h2>{{ book.title }}</h2>
+    <p>{{ book.text }}</p>
+    <p>{{ book.category }}</p>
+    <a href="{% url 'book:book_list' %}">戻る</a>
+
+    <a href="{% url 'book:book_update' book.id %}">編集</a>
+    <a href="{% url 'book:book_delete' book.id %}">削除</a>
+
+    
+    
+</body>
+</html>
