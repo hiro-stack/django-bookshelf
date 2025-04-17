@@ -1,0 +1,37 @@
+<!-- user_signup.html -->
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ユーザー登録</title>
+</head>
+<body>
+    <h2>ユーザー登録画面</h2>
+    <form method="POST">
+        {% csrf_token %}
+        
+        <input type="text" name="username" placeholder="ユーザー名" required>
+        <br>
+
+        <input type="email" name="email" placeholder="メールアドレス" required>
+        <br>
+
+        <input type="password" name="password1" placeholder="パスワード" required>
+        <br>
+
+        <input type="password" name="password2" placeholder="パスワード確認" required>
+        <br>
+
+        <small>パスワードは8文字以上で設定してください</small>
+        <br>
+
+        {% if form.errors %}
+          <span>利用できないユーザー名やパスワードの可能性があります。入力内容をご確認してください</span>
+          <br>
+        {% endif %}
+
+        <button type="submit">アカウント作成</button>
+    </form>
+</body>
+</html>

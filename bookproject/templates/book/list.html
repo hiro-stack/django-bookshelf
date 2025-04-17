@@ -7,6 +7,15 @@
 </head>
 <body>
     <h1>Booksリスト画面</h1>
+
+    {% if request.user.is_authenticated %}
+        <p>ようこそ、{{ request.user.username }}さん</p>
+        <a href="{% url 'accounts:logout' %}">ログアウト</a>
+
+    {% else %}
+        <a href="{% url 'accounts:login' %}">ログイン</a>
+        <a href="{% url 'accounts:signup' %}">新規登録</a>
+    {% endif %}    
     <ul>
         {% for book in books %}
             <a href="{% url 'book:book_detail' book.id %}">{{ book.title }}</a>

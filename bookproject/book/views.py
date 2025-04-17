@@ -6,7 +6,7 @@ from .forms import BookForm
 
 class ListBookView(ListView):
     def get(self, request):
-        books = Book.objects.all()
+        books = Book.objects.all().order_by("category")
         return render(request, "book/list.html", {"books": books})
 
 
