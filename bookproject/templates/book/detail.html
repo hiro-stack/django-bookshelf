@@ -10,12 +10,32 @@
     <h2>{{ book.title }}</h2>
     <p>{{ book.text }}</p>
     <p>{{ book.category }}</p>
+
+    <h2>{{ book.title }} のレビュー一覧</h2>
+    
+    {% if reviews %}
+    <ul>
+        {% for review in reviews %}
+        <li>
+            <strong>{{ review.title }}</strong>（評価：{{ review.rate }}）<br>
+            {{ review.text }}<br>
+            by {{ review.user.username }}
+        </li>     
+        {% endfor %}
+    </ul>
+    
+    {% else %}
+    <p>レビューはまだありません。</p>
+    
+    {% endif %}
+
+
+    <a href="{% url 'book:book_review' book.id %}">レビュー作成</a>
     <a href="{% url 'book:book_list' %}">戻る</a>
 
     <a href="{% url 'book:book_update' book.id %}">編集</a>
     <a href="{% url 'book:book_delete' book.id %}">削除</a>
 
-    
-    
+
 </body>
 </html>

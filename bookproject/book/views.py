@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Book
+from .models import Book, Review
 from django.views.generic import ListView
-from .forms import BookForm
+from .forms import BookForm, ReviewForm
 
 
 class ListBookView(ListView):
@@ -13,7 +13,8 @@ class ListBookView(ListView):
 class DetailBookView(ListView):
     def get(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
-        return render(request, "book/detail.html", {"book": book})
+        reviews = Review.objects.filter(book=book)
+        return render(request, "book/detail.html", {"book": book, "reviews": reviews})
 
 
 class CreateBookView(ListView):
@@ -55,8 +56,27 @@ class DeleteBookView(ListView):
         return redirect("book:book_list")
 
 
+class ReviewBookView(ListView):
+    def get(self, request, pk):
+        book = get_object_or_404(Book, pk=pk)
+        form = ReviewForm()
+        return render(request, "book/review.html", {"form": form, "book": book})
+
+    def post(self, request, pk):
+        book = get_object_or_404(Book, pk=pk)
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.book = book
+            review.user = request.user
+            review.save()
+            return redirect("book:book_detail", pk=pk)
+        return render(request, "book/review.html", {"form": form, "book": book})
+
+
 book_list = ListBookView.as_view()
 book_detail = DetailBookView.as_view()
 book_create = CreateBookView.as_view()
 book_update = UpdateBookView.as_view()
 book_delete = DeleteBookView.as_view()
+book_review = ReviewBookView.as_view()

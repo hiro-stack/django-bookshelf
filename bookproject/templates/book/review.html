@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>レビュー作成画面</title>
+</head>
+<body>
+    <h1>レビュー作成画面</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label>対象書籍:</label>
+        <input type="text" value="{{ book.title }}" readonly><br>
+
+        <label>タイトル:</label>
+        <input type="text" name="title" required><br>
+
+        <label>本文:</label>
+        <textarea name="text" required></textarea><br>
+
+        <label>星の数:</label>
+        <select name="rate" required>
+            <option value="0">1(最低)</option>
+            <option value="1">2</option>
+            <option value="2">3</option>
+            <option value="3">4</option>
+            <option value="4">5(最高)</option>
+            </select>
+        <br>
+        {% if form.errors %}
+          <span>入力内容をご確認してください</span>
+          <br>
+        {% endif %}
+        <button type="submit">レビューを作成</button>
+
+        
+    </form>
+</body>
+</html>
