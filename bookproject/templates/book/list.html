@@ -33,6 +33,47 @@
         {% endfor %}
     </ul>
 
+    <div class="pagination">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+            <a href="?page=1">最初</a>
+            <a href="?page={{ page_obj.previous_page_number }}">前へ</a>
+          {% endif %}
+      
+          <span class="current">
+            {{ page_obj.number }} / {{ page_obj.paginator.num_pages }}ページ
+          </span>
+      
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">最後</a>
+          {% endif %}
+        </span>
+      </div>
+
+    <h2>ランキング順</h2>
+    {% for ranking_book in ranking_list %}
+        <li>
+            <a href="{% url 'book:book_detail' ranking_book.id %}">{{ ranking_book.title }}</a>
+
+            {% if not ranking_book.average_rate %}
+              <p>評価点数: まだ評価されていません</p>
+            {% else %}
+              <p>評価点数: {{ ranking_book.average_rate|floatformat:2 }}</p>
+            {% endif %}
+
+            {% if ranking_book.thumbnail %}
+              <img src="{{ ranking_book.thumbnail.url }}" alt="{{ ranking_book.title }}"><br>
+              
+            {% else %}
+              <p>画像は未登録です。</p>
+              
+            {% endif %}
+            <p>{{ ranking_book.text }}</p>
+            <p>{{ ranking_book.category }}</p>
+        </li>
+    {% endfor %}
+
     <a href="{% url 'book:book_create' %}">新規作成</a>
 
     

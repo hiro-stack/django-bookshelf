@@ -6,12 +6,13 @@ from .models import Review
 class BookForm(ModelForm):
     class Meta:
         model = Book
-        fields = ["title", "text", "category", "thumbnail"]
+        fields = ["title", "text", "category", "thumbnail", "user"]
         labels = {
             "title": "タイトル",
             "text": "内容",
             "category": "カテゴリー",
             "thumbnail": "サムネイル",
+            "user": "ユーザー",
         }
 
 

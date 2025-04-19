@@ -20,6 +20,9 @@ class Book(models.Model):
     category = models.CharField(
         max_length=20, choices=CATEGORY_CHOICES, verbose_name="カテゴリー"
     )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, verbose_name="ユーザー", related_name="books"
+    )
 
     def __str__(self):
         return self.title

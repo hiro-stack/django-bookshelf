@@ -2,12 +2,30 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Book, Review
 from django.views.generic import ListView
 from .forms import BookForm, ReviewForm
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
+from django.db.models import Avg
+from django.core.paginator import Paginator
+from .consts import ITEM_PER_PAGE
 
 
 class ListBookView(ListView):
     def get(self, request):
-        books = Book.objects.all().order_by("category")
-        return render(request, "book/list.html", {"books": books})
+        books = Book.objects.all().order_by("-id")
+
+        paginator = Paginator(books, ITEM_PER_PAGE)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        ranking_list = Book.objects.annotate(average_rate=Avg("review__rate")).order_by(
+            "-average_rate"
+        )[:5]
+
+        return render(
+            request,
+            "book/list.html",
+            {"books": page_obj, "ranking_list": ranking_list, "page_obj": page_obj},
+        )
 
 
 class DetailBookView(ListView):
@@ -17,7 +35,7 @@ class DetailBookView(ListView):
         return render(request, "book/detail.html", {"book": book, "reviews": reviews})
 
 
-class CreateBookView(ListView):
+class CreateBookView(LoginRequiredMixin, ListView):
     def get(self, request):
         form = BookForm()
         return render(request, "book/create.html", {"form": form})
@@ -30,7 +48,7 @@ class CreateBookView(ListView):
         return render(request, "book/create.html", {"form": form})
 
 
-class UpdateBookView(ListView):
+class UpdateBookView(LoginRequiredMixin, ListView):
     def get(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
         form = BookForm(instance=book)
@@ -38,6 +56,10 @@ class UpdateBookView(ListView):
 
     def post(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
+
+        if request.user != book.user:
+            raise PermissionDenied("You do not have permission to edit this book.")
+
         form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
@@ -45,18 +67,20 @@ class UpdateBookView(ListView):
         return render(request, "book/update.html", {"form": form})
 
 
-class DeleteBookView(ListView):
+class DeleteBookView(LoginRequiredMixin, ListView):
     def get(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
         return render(request, "book/delete_confirm.html", {"book": book})
 
     def post(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
+        if request.user != book.user:
+            raise PermissionDenied("You do not have permission to edit this book.")
         book.delete()
         return redirect("book:book_list")
 
 
-class ReviewBookView(ListView):
+class ReviewBookView(LoginRequiredMixin, ListView):
     def get(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
         form = ReviewForm()

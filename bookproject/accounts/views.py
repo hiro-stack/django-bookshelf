@@ -3,13 +3,14 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from .forms import SignUpForm
 from django.views import View
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class UserLoginView(LoginView):
     template_name = "registration/login.html"
 
 
-class UserLogoutView(View):
+class UserLogoutView(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect("book:book_list")
