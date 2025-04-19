@@ -23,7 +23,7 @@ class CreateBookView(ListView):
         return render(request, "book/create.html", {"form": form})
 
     def post(self, request):
-        form = BookForm(request.POST)
+        form = BookForm(request.POST, request.FILES)
         if form.is_valid():
             form.save()
             return redirect("book:book_list")
@@ -38,7 +38,7 @@ class UpdateBookView(ListView):
 
     def post(self, request, pk):
         book = get_object_or_404(Book, pk=pk)
-        form = BookForm(request.POST, instance=book)
+        form = BookForm(request.POST, request.FILES, instance=book)
         if form.is_valid():
             form.save()
             return redirect("book:book_list")

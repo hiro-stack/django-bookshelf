@@ -7,7 +7,7 @@
 </head>
 <body>
     <h1>新規作成画面</h1>
-    <form method="POST" action="{% url 'book:book_create' %}">
+    <form method="POST" action="{% url 'book:book_create' %}"  enctype="multipart/form-data">
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">作成</button>

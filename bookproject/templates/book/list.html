@@ -18,9 +18,18 @@
     {% endif %}    
     <ul>
         {% for book in books %}
+        <li>
             <a href="{% url 'book:book_detail' book.id %}">{{ book.title }}</a>
-            <li>{{ book.text }}</li>
-            <li>{{ book.category }}</li>
+            {% if book.thumbnail %}
+              <img src="{{ book.thumbnail.url }}" alt="{{ book.title }}"><br>
+              
+            {% else %}
+              <p>画像は未登録です。</p>
+              
+            {% endif %}
+            <p>{{ book.text }}</p>
+            <p>{{ book.category }}</p>
+        </li>
         {% endfor %}
     </ul>
 

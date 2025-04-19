@@ -13,6 +13,9 @@ class Book(models.Model):
     )
 
     title = models.CharField(max_length=100, verbose_name="タイトル")
+    thumbnail = models.ImageField(
+        upload_to="book/picture", blank=True, null=True, verbose_name="サムネイル"
+    )
     text = models.TextField(verbose_name="内容")
     category = models.CharField(
         max_length=20, choices=CATEGORY_CHOICES, verbose_name="カテゴリー"
